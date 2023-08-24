@@ -1,9 +1,14 @@
 __pycache__/
+.DS_Store
 venv
 *env
 .git
-*.zip
+*.o
+*.out
+.vscode
+*_submission.zip
 *.tar
+*.tgz
 *.gz
 *.7z
-*:Zone.Identifier
+*Zone.Identifier
