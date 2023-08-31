@@ -20,7 +20,7 @@ int main(int argc, char* argv[]) {
   // declaring and initializing variables, functions
   int N = atoi(argv[1]);
   float t_max = 2.0, x_min = 0.0, x_max = 1.0, v = 1.0, xc = 0.25, dt = atof(argv[2]);
-  float dx = (x_max - x_min) / 2.0, nbsteps = (int) (t_max / dt), alpha = v * (dt / (2 * dx));
+  float dx = (x_max - x_min) / N, nbsteps = (int) (t_max / dt), alpha = v * (dt / (2 * dx));
   
   // declaring, initializing, and populating arrays
   float* x = new float[N + 2]; float* u_o = new float[N + 2];
