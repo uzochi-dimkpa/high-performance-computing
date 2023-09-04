@@ -5,6 +5,7 @@ venv
 .git
 *.o
 *.out
+*_out.txt
 *.vscode
 *_submission.zip
 *.tar
