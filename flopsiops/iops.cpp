@@ -6,7 +6,7 @@
 
 
 int main() {
-  /// WARNING:
+  //// WARNING:
   // Make sure to use the `-Ofast` and `-ffast-math`
   // flags when compiling, otherwise your CPU will
   // begin overclocking and won't stop until the
@@ -28,7 +28,7 @@ int main() {
   #pragma omp parallel
   {
     #pragma omp parallel for
-    for (int i = 0; i < loop_end; ++i) {
+    for (int i = 0; i < loop_end * loop_end * loop_end * loop_end; ++i) {
       out = _mm256_add_epi8(am, bm);
       __m256i out2 = _mm256_add_epi8(am, bm);
       __m256i out3 = _mm256_add_epi8(am, bm);
@@ -59,6 +59,8 @@ int main() {
       __m256i out28 = _mm256_add_epi8(am, bm);
       __m256i out29 = _mm256_add_epi8(am, bm);
       __m256i out30 = _mm256_add_epi8(am, bm);
+      __m256i out31 = _mm256_add_epi8(am, bm);
+      __m256i out32 = _mm256_add_epi8(am, bm);
     }
   }
 
@@ -73,7 +75,10 @@ int main() {
 
   // Time duration, # of Flops, Flops / sec
   std::cout << "Time elapsed (s): " << elapsed_seconds.count() << std::endl;
-  niops = (1 * 16) * loop_end;
+  niops = (16 * 32) * loop_end;
+  niops *= loop_end;
+  niops *= loop_end;
+  niops *= loop_end;
   if (niops >= 0) {
     std::cout << "Loop end: " << loop_end << std::endl;
     std::cout << "# of Iops: " << niops << std::endl;

@@ -6,7 +6,7 @@
 
 
 int main() {
-  /// WARNING:
+  //// WARNING:
   // Make sure to use the `-Ofast` and `-ffast-math`
   // flags when compiling, otherwise your CPU will
   // begin overclocking and won't stop until the
@@ -22,7 +22,7 @@ int main() {
   std::chrono::time_point<std::chrono::system_clock> time_start = std::chrono::system_clock::now();
 
 
-  /// OLD:
+  //// OLD:
   /* ... */
   // Initialize array and floats for flops
 

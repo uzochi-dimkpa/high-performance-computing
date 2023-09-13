@@ -1,5 +1,6 @@
 LD=g++
 LDFLAGS=-fopenmp -Ofast -mfma -mavx2 -march=znver2 -mtune=znver2 -ffast-math -save-temps -fverbose-asm
+LDNOOPS=-fopenmp -mfma -mavx2 -save-temps -fverbose-asm
 VALGRINDFLAGS=--track-origins=yes --leak-check=full --show-leak-kinds=all --show-reachable=yes -s
 
 
@@ -22,6 +23,7 @@ debug: clear clean compile
 compile:
 	- $(LD) $(LDFLAGS) -o flops flops.cpp
 	- $(LD) $(LDFLAGS) -o iops iops.cpp
+#	- $(LD) $(LDNOOPS) -o iops iops.cpp
 
 clean:
 	- rm -rf *.o
