@@ -4,6 +4,8 @@ venv
 *env
 .git
 *.o
+*.ii
+*.s
 *.out
 *_out.txt
 *.vscode
@@ -13,3 +15,4 @@ venv
 *.gz
 *.7z
 *Zone.Identifier
+*~$*.docx
