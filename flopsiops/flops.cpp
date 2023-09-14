@@ -49,7 +49,7 @@ int main() {
   // OpenMP parallel
   #pragma omp parallel
   {
-    #pragma omp parallel for
+    // #pragma omp parallel for
     for (int i = 0; i < loop_end; ++i) {
       out = _mm256_fmadd_ps(am, bm, out);
       __m256 out2 = _mm256_fmadd_ps(am, bm, out2);
@@ -95,10 +95,11 @@ int main() {
 
   // Time duration, # of Flops, Flops / sec
   std::cout << "Time elapsed (s): " << elapsed_seconds.count() << std::endl;
-  nflops = (60 * 16) * loop_end;
+  nflops = (16 * 30 * 2) * loop_end;
   if (nflops > 0) {
+    std::cout << "Loop end: " << nflops / (16 * 30 * 2) << std::endl;
     std::cout << "# of Flops: " << nflops << std::endl;
-    std::cout << "Flops / sec == " << (double) nflops / elapsed_seconds.count()<< std::endl;
+    std::cout << "Flops / sec == " << (double) nflops / elapsed_seconds.count() << std::endl;
   }
 
   // Memory deallocation
