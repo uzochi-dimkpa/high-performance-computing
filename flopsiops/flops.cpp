@@ -13,10 +13,10 @@ int main() {
   // program runs to its conclusion
   
   // Initialize necessary variables, registers, and arrays
-  long double nflops = 0.0; int size = 65536; unsigned long long int loop_end = 2100000000; // -- 536870912; // -- 429496729;
+  long double nflops = 0.0; int size = 65536; unsigned long long int loop_end = 210000000; // -- 536870912; // -- 429496729;
   float a[size], b[size];
-  for (int i = 0; i < size * size; ++i) {a[i] = float(1.7); b[i] = float(3.4);}
-  __m256 out; __m256 am = _mm256_loadu_ps(a), bm = _mm256_loadu_ps(b);
+  for (int i = 0; i < size; ++i) {a[i] = float(1.7); b[i] = float(3.4);}
+  __m256 out; __m256 am = _mm256_load_ps(a), bm = _mm256_load_ps(b);
 
   // Time start
   std::chrono::time_point<std::chrono::system_clock> time_start = std::chrono::system_clock::now();
@@ -49,39 +49,57 @@ int main() {
   // OpenMP parallel
   #pragma omp parallel
   {
+    __m256 out2;
+    __m256 out3;
+    __m256 out4;
+    __m256 out5;
+    __m256 out6;
+    __m256 out7;
+    __m256 out8;
+
     // #pragma omp parallel for
     for (int i = 0; i < loop_end; ++i) {
       out = _mm256_fmadd_ps(am, bm, out);
-      __m256 out2 = _mm256_fmadd_ps(am, bm, out2);
-      __m256 out3 = _mm256_fmadd_ps(am, bm, out3);
-      __m256 out4 = _mm256_fmadd_ps(am, bm, out4);
-      __m256 out5 = _mm256_fmadd_ps(am, bm, out5);
-      __m256 out6 = _mm256_fmadd_ps(am, bm, out6);
-      __m256 out7 = _mm256_fmadd_ps(am, bm, out7);
-      __m256 out8 = _mm256_fmadd_ps(am, bm, out8);
-      __m256 out9 = _mm256_fmadd_ps(am, bm, out9);
-      __m256 out10 = _mm256_fmadd_ps(am, bm, out10);
-      __m256 out11 = _mm256_fmadd_ps(am, bm, out11);
-      __m256 out12 = _mm256_fmadd_ps(am, bm, out12);
-      __m256 out13 = _mm256_fmadd_ps(am, bm, out13);
-      __m256 out14 = _mm256_fmadd_ps(am, bm, out14);
-      __m256 out15 = _mm256_fmadd_ps(am, bm, out15);
-      __m256 out16 = _mm256_fmadd_ps(am, bm, out16);
-      __m256 out17 = _mm256_fmadd_ps(am, bm, out17);
-      __m256 out18 = _mm256_fmadd_ps(am, bm, out18);
-      __m256 out19 = _mm256_fmadd_ps(am, bm, out19);
-      __m256 out20 = _mm256_fmadd_ps(am, bm, out20);
-      __m256 out21 = _mm256_fmadd_ps(am, bm, out21);
-      __m256 out22 = _mm256_fmadd_ps(am, bm, out22);
-      __m256 out23 = _mm256_fmadd_ps(am, bm, out23);
-      __m256 out24 = _mm256_fmadd_ps(am, bm, out24);
-      __m256 out25 = _mm256_fmadd_ps(am, bm, out25);
-      __m256 out26 = _mm256_fmadd_ps(am, bm, out26);
-      __m256 out27 = _mm256_fmadd_ps(am, bm, out27);
-      __m256 out28 = _mm256_fmadd_ps(am, bm, out28);
-      __m256 out29 = _mm256_fmadd_ps(am, bm, out29);
-      __m256 out30 = _mm256_fmadd_ps(am, bm, out30);
+      out2 = _mm256_fmadd_ps(am, bm, out2);
+      out3 = _mm256_fmadd_ps(am, bm, out3);
+      out4 = _mm256_fmadd_ps(am, bm, out4);
+      out5 = _mm256_fmadd_ps(am, bm, out5);
+      out6 = _mm256_fmadd_ps(am, bm, out6);
+      out7 = _mm256_fmadd_ps(am, bm, out7);
+      out8 = _mm256_fmadd_ps(am, bm, out8);
+      // __m256 out9 = _mm256_fmadd_ps(am, bm, out9);
+      // __m256 out10 = _mm256_fmadd_ps(am, bm, out10);
+      // __m256 out11 = _mm256_fmadd_ps(am, bm, out11);
+      // __m256 out12 = _mm256_fmadd_ps(am, bm, out12);
+      // __m256 out13 = _mm256_fmadd_ps(am, bm, out13);
+      // __m256 out14 = _mm256_fmadd_ps(am, bm, out14);
+      // __m256 out15 = _mm256_fmadd_ps(am, bm, out15);
+      // __m256 out16 = _mm256_fmadd_ps(am, bm, out16);
+      // __m256 out17 = _mm256_fmadd_ps(am, bm, out17);
+      // __m256 out18 = _mm256_fmadd_ps(am, bm, out18);
+      // __m256 out19 = _mm256_fmadd_ps(am, bm, out19);
+      // __m256 out20 = _mm256_fmadd_ps(am, bm, out20);
+      // __m256 out21 = _mm256_fmadd_ps(am, bm, out21);
+      // __m256 out22 = _mm256_fmadd_ps(am, bm, out22);
+      // __m256 out23 = _mm256_fmadd_ps(am, bm, out23);
+      // __m256 out24 = _mm256_fmadd_ps(am, bm, out24);
+      // __m256 out25 = _mm256_fmadd_ps(am, bm, out25);
+      // __m256 out26 = _mm256_fmadd_ps(am, bm, out26);
+      // __m256 out27 = _mm256_fmadd_ps(am, bm, out27);
+      // __m256 out28 = _mm256_fmadd_ps(am, bm, out28);
+      // __m256 out29 = _mm256_fmadd_ps(am, bm, out29);
+      // __m256 out30 = _mm256_fmadd_ps(am, bm, out30);
     }
+
+    out = _mm256_fmadd_ps(out, out, out2);
+    out = _mm256_fmadd_ps(out, out, out3);
+    out = _mm256_fmadd_ps(out, out, out4);
+    out = _mm256_fmadd_ps(out, out, out5);
+    out = _mm256_fmadd_ps(out, out, out6);
+    out = _mm256_fmadd_ps(out, out, out7);
+    out = _mm256_fmadd_ps(out, out, out8);
+    // out = _mm256_fmadd_ps(out, out, out9);
+    _mm256_store_ps(a, out);
   }
 
   /// END: resource/memory saturation
@@ -95,9 +113,12 @@ int main() {
 
   // Time duration, # of Flops, Flops / sec
   std::cout << "Time elapsed (s): " << elapsed_seconds.count() << std::endl;
-  nflops = (16 * 30 * 2) * loop_end;
+  int cores=16;
+  int nbinstrperloop=8;
+  int nbopperinst=(256/32) * 2;
+  nflops = (cores*nbinstrperloop*nbopperinst) * loop_end;
   if (nflops > 0) {
-    std::cout << "Loop end: " << nflops / (16 * 30 * 2) << std::endl;
+    std::cout << "Loop end: " << nflops / (cores*nbinstrperloop*nbopperinst) << std::endl;
     std::cout << "# of Flops: " << nflops << std::endl;
     std::cout << "Flops / sec == " << (double) nflops / elapsed_seconds.count() << std::endl;
   }

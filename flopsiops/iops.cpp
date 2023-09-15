@@ -13,10 +13,10 @@ int main() {
   // program runs to its conclusion
   
   // Initialize necessary variables, registers, and arrays
-  long double niops = 0.0; int size = 65536; unsigned long long int loop_end = 7200000000; // -- 14400000000; // -- 2100000000; // -- 536870912; // -- 429496729;
+  long double niops = 0.0; int size = 65536; unsigned long long int loop_end = 720000000; // -- 14400000000; // -- 2100000000; // -- 536870912; // -- 429496729;
   int a[size], b[size];
-  for (int i = 0; i < size * size; ++i) {a[i] = 4; b[i] = 7;}
-  __m256i out; __m256i am = _mm256_load_si256((__m256i*) a); // -- , bm = _mm256_load_si256((__m256i*) b);
+  for (int i = 0; i < size; ++i) {a[i] = 4; b[i] = 7;}
+  __m256i am = _mm256_load_si256((__m256i*) a) , bm = _mm256_load_si256((__m256i*) b);
 
   // Time start
   std::chrono::time_point<std::chrono::system_clock> time_start = std::chrono::system_clock::now();
@@ -27,41 +27,75 @@ int main() {
   // OpenMP parallel
   #pragma omp parallel
   {
+    //// OLD:
+    // -- //
+    // __m256i out = _mm256_load_si256((__m256i*) a);
+    // __m256i out2= _mm256_load_si256((__m256i*) a+8);
+    // __m256i out3= _mm256_load_si256((__m256i*) a+16);
+    // __m256i out7= _mm256_load_si256((__m256i*) a+24);
+    // __m256i out8= _mm256_load_si256((__m256i*) a+32);
+    // __m256i out9= _mm256_load_si256((__m256i*) a+40);
+    // -- //
+
+    //// OLD:
+    // -- //
+    // __m256i out4= _mm256_load_si256((__m256i*) a+16);
+    // __m256i out5= _mm256_load_si256((__m256i*) a+24);
+    // __m256i out6= _mm256_load_si256((__m256i*) a+32);
+    // __m256i out10= _mm256_load_si256((__m256i*) a+64);
+    // __m256i out11= _mm256_load_si256((__m256i*) a+72);
+    // __m256i out12= _mm256_load_si256((__m256i*) a+80);
+    // -- //
+
+    //// NEW:
+    // -- //
+    __m256i out;
+    __m256i out2;
+    __m256i out3;
+    __m256i out7;
+    __m256i out8;
+    __m256i out9;
+    // -- //
+
     // #pragma omp parallel for
     for (unsigned long long int i = 0; i < loop_end; ++i) {
-      out = _mm256_add_epi8(am, out);
-      __m256i out2 = _mm256_add_epi8(am, out2);
-      __m256i out3 = _mm256_add_epi8(am, out3);
-      __m256i out4 = _mm256_add_epi8(am, out4);
-      __m256i out5 = _mm256_add_epi8(am, out5);
-      __m256i out6 = _mm256_add_epi8(am, out6);
-      __m256i out7 = _mm256_add_epi8(am, out7);
-      __m256i out8 = _mm256_add_epi8(am, out8);
-      __m256i out9 = _mm256_add_epi8(am, out9);
-      __m256i out10 = _mm256_add_epi8(am, out10);
-      __m256i out11 = _mm256_add_epi8(am, out11);
-      __m256i out12 = _mm256_add_epi8(am, out12);
-      __m256i out13 = _mm256_add_epi8(am, out13);
-      __m256i out14 = _mm256_add_epi8(am, out14);
-      __m256i out15 = _mm256_add_epi8(am, out15);
-      __m256i out16 = _mm256_add_epi8(am, out16);
-      __m256i out17 = _mm256_add_epi8(am, out17);
-      __m256i out18 = _mm256_add_epi8(am, out18);
-      __m256i out19 = _mm256_add_epi8(am, out18);
-      __m256i out20 = _mm256_add_epi8(am, out19);
-      __m256i out21 = _mm256_add_epi8(am, out20);
-      __m256i out22 = _mm256_add_epi8(am, out22);
-      __m256i out23 = _mm256_add_epi8(am, out23);
-      __m256i out24 = _mm256_add_epi8(am, out24);
-      __m256i out25 = _mm256_add_epi8(am, out25);
-      __m256i out26 = _mm256_add_epi8(am, out26);
-      __m256i out27 = _mm256_add_epi8(am, out27);
-      __m256i out28 = _mm256_add_epi8(am, out28);
-      __m256i out29 = _mm256_add_epi8(am, out29);
-      __m256i out30 = _mm256_add_epi8(am, out30);
-      __m256i out31 = _mm256_add_epi8(am, out31);
-      __m256i out32 = _mm256_add_epi8(am, out32);
+      //// OLD:
+      // -- //
+      // out7 = _mm256_add_epi8(am, out);
+      // out8 = _mm256_add_epi8(am, out2);
+      // out9 = _mm256_add_epi8(am, out3);
+      // out = _mm256_add_epi8(bm, out7);
+      // out2 = _mm256_add_epi8(bm, out8);
+      // out3 = _mm256_add_epi8(bm, out9);
+      // -- //
+      
+      //// NEW:
+      // -- //
+      out7 = _mm256_add_epi8(am, out);
+      out8 = _mm256_add_epi8(out, out2);
+      out9 = _mm256_add_epi8(out2, out3);
+      out = _mm256_add_epi8(bm, out7);
+      out2 = _mm256_add_epi8(out7, out8);
+      out3 = _mm256_add_epi8(out8, out9);
+      // -- //
     }
+    //// OLD:
+    // -- //
+    // out = _mm256_add_epi8(out, out2);
+    // out = _mm256_add_epi8(out, out3);
+    // out = _mm256_add_epi8(out, out7);
+    // out = _mm256_add_epi8(out, out8);
+    // out = _mm256_add_epi8(out, out9);
+    // _mm256_store_si256((__m256i*) a, out);
+    // -- //
+
+    //// NEW:
+    // -- //
+    out = _mm256_add_epi8(out, out2);
+    out = _mm256_add_epi8(out3, out7);
+    out = _mm256_add_epi8(out8, out9);
+    _mm256_store_si256((__m256i*) a, out);
+    // -- //
   }
 
   /// END: resource/memory saturation
@@ -75,9 +109,12 @@ int main() {
 
   // Time duration, # of Flops, Flops / sec
   std::cout << "Time elapsed (s): " << elapsed_seconds.count() << std::endl;
-  niops = (16 * 32) * loop_end;
+  int cores=16;
+  int nbinstrperloop=6;
+  int nbopperinst=256/8;
+  niops = (cores*nbinstrperloop*nbopperinst) * loop_end;
   if (niops >= 0) {
-    std::cout << "Loop end: " << niops / (16 * 32) << std::endl;
+    std::cout << "Loop end: " << niops / (cores*nbinstrperloop*nbopperinst) << std::endl;
     std::cout << "# of Iops: " << niops << std::endl;
     std::cout << "Iops / sec == " << (double) niops / elapsed_seconds.count()<< std::endl;
   }
