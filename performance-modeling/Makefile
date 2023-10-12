@@ -68,7 +68,7 @@ run_all:
 debug: clean compile
 	- valgrind $(VALGRINDFLAGS) ./convolution 50 50 3 >> debug.out
 	- valgrind $(VALGRINDFLAGS) ./convolution 50 100 15 >> debug.out
-	- valgrind $(VALGRINDFLAGS) ./convolution 8192 8192 3 >> debug.out
+#	- valgrind $(VALGRINDFLAGS) ./convolution 8192 8192 3 >> debug.out
 #	- valgrind $(VALGRINDFLAGS) ./convolution 4194304 768 3 >> debug.out
 # --- terminate called after throwing an instance of 'std::bad_array_new_length' what():  std::bad_array_new_length
 #	- valgrind $(VALGRINDFLAGS) ./convolution 16777216 768 3 >> debug.out
