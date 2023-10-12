@@ -190,12 +190,12 @@ int main(int argc, char* argv[]) {
   const unsigned long int SIZE_PADDED = (n + (k - 1)) * (m + (k - 1));
   
   // Generate & populate input image
-  std::vector<std::vector<float>> image2(n + (k - 1), std::vector<float>(m + (k - 1), 0));
+  // std::vector<std::vector<float>> image2(n + (k - 1), std::vector<float>(m + (k - 1), 0));
   float* image = new float[SIZE_PADDED]; std::fill_n(image, SIZE_PADDED, 0);
   for (unsigned long int i = (k / 2); i < n + (k / 2); ++i) {
     for (unsigned long int j = (k / 2); j < m + (k / 2); ++j) {
       image[i * (m + (k - 1)) + j] = 1;
-      image2[i][j] = 1;
+      // image2[i][j] = 1;
     }
   }
   /// DEBUG:
@@ -214,7 +214,7 @@ int main(int argc, char* argv[]) {
   /**/
 
   // Generate output image
-  std::vector<std::vector<float>> out2(n, std::vector<float>(m, 0));
+  // std::vector<std::vector<float>> out2(n, std::vector<float>(m, 0));
   float* out = new float[SIZE]; std::fill_n(out, SIZE, 0);
   
   
@@ -230,8 +230,8 @@ int main(int argc, char* argv[]) {
   /// COMPLETE: Convolution
   for (unsigned long int i = (k / 2); i < n + (k / 2); ++i) {
     for (unsigned long int j = (k / 2); j < m + (k / 2); ++j) {
-      // convol(image, out, filter, i, j, n, m, k);
-      convolVector(image2, out2, filter, i, j, n, m, k);
+      convol(image, out, filter, i, j, n, m, k);
+      // convolVector(image2, out2, filter, i, j, n, m, k);
     }
   }
 
@@ -249,8 +249,8 @@ int main(int argc, char* argv[]) {
   std::cout << "Time elapsed (s): " << elapsed_seconds.count() << std::endl;
   std::cout << "SIZE: " << SIZE << std::endl;
   std::cout << "SIZE_PADDED: " << SIZE_PADDED << std::endl;
-  // printFilter(filter, k); printImage(image, n, m, k, "image"); printOutput(out, n, m, k, "output");
-  printFilter(filter, k); printImageVector(image2, n, m, k, "image"); printOutputVector(out2, n, m, k, "output");
+  printFilter(filter, k); printImage(image, n, m, k, "image"); printOutput(out, n, m, k, "output");
+  // printFilter(filter, k); printImageVector(image2, n, m, k, "image"); printOutputVector(out2, n, m, k, "output");
   std::cout << "\n\n\n\n";
   
 
