@@ -228,12 +228,29 @@ int main(int argc, char* argv[]) {
 
   /// TODO: Convolution
   /// COMPLETE: Convolution
+  /*
   for (unsigned long int i = (k / 2); i < n + (k / 2); ++i) {
     for (unsigned long int j = (k / 2); j < m + (k / 2); ++j) {
       convol(image, out, filter, i, j, n, m, k);
       // convolVector(image2, out2, filter, i, j, n, m, k);
     }
   }
+  /**/
+
+
+  /// TODO: Convolution optimized
+  /// INCOMPLETE:
+  /**/
+  #pragma omp parallel for collapse(2)
+  {
+    for (unsigned long int i = (k / 2); i < n + (k / 2); ++i) {
+      for (unsigned long int j = (k / 2); j < m + (k / 2); ++j) {
+        convol(image, out, filter, i, j, n, m, k);
+        // convolVector(image2, out2, filter, i, j, n, m, k);
+      }
+    }
+  }
+  /**/
 
 
   // Time end
@@ -245,7 +262,7 @@ int main(int argc, char* argv[]) {
   
 
   // Time duration & result/data output
-  std::cout << argv[0] << " " << n << " " << m << " " << k << std::endl;
+  std::cout << argv[0] << " " << n << " " << m << " " << k << std::endl; // --- " parallel: " << true <<
   std::cout << "Time elapsed (s): " << elapsed_seconds.count() << std::endl;
   std::cout << "SIZE: " << SIZE << std::endl;
   std::cout << "SIZE_PADDED: " << SIZE_PADDED << std::endl;
