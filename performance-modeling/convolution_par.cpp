@@ -232,7 +232,7 @@ int main(int argc, char* argv[]) {
 
   /// TODO: Convolution
   /// COMPLETE:
-  /**/
+  /*
   for (unsigned long int i = (k / 2); i < n + (k / 2); ++i) {
     for (unsigned long int j = (k / 2); j < m + (k / 2); ++j) {
       convol(image, out, filter, i, j, n, m, k);
@@ -244,7 +244,7 @@ int main(int argc, char* argv[]) {
 
   /// TODO: Convolution optimized
   /// INCOMPLETE:
-  /*
+  /**/
   #pragma omp parallel for collapse(2)
   {
     for (unsigned long int i = (k / 2); i < n + (k / 2); ++i) {
