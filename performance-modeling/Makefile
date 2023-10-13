@@ -52,44 +52,44 @@ run_all:
 	- ./convolution 1024 768 3 >> convolution_k3_.out
 	- ./convolution 2048 2048 3 >> convolution_k3_.out
 	- ./convolution 8192 8192 3 >> convolution_k3_.out
-#	- ./convolution 4194304 768 3 >> convolution_k3_.out
-#	- ./convolution 16777216 768 3 >> convolution_k3_.out
+	- ./convolution 4194304 768 3 >> convolution_k3_.out
+	- ./convolution 16777216 768 3 >> convolution_k3_.out
 
 	- ./convolution 1024 768 5 >> convolution_k5_.out
 	- ./convolution 2048 2048 5 >> convolution_k5_.out
 	- ./convolution 8192 8192 5 >> convolution_k5_.out
-#	- ./convolution 4194304 768 5 >> convolution_k5_.out
-#	- ./convolution 16777216 768 5 >> convolution_k5_.out
+	- ./convolution 4194304 768 5 >> convolution_k5_.out
+	- ./convolution 16777216 768 5 >> convolution_k5_.out
 
 	- ./convolution 1024 768 7 >> convolution_k7_.out
 	- ./convolution 2048 2048 7 >> convolution_k7_.out
 	- ./convolution 8192 8192 7 >> convolution_k7_.out
-#	- ./convolution 4194304 768 7 >> convolution_k7_.out
-#	- ./convolution 16777216 768 7 >> convolution_k7_.out
+	- ./convolution 4194304 768 7 >> convolution_k7_.out
+	- ./convolution 16777216 768 7 >> convolution_k7_.out
 
 	- ./convolution 1024 768 9 >> convolution_k9_.out
 	- ./convolution 2048 2048 9 >> convolution_k9_.out
 	- ./convolution 8192 8192 9 >> convolution_k9_.out
-#	- ./convolution 4194304 768 9 >> convolution_k9_.out
-#	- ./convolution 16777216 768 9 >> convolution_k9_.out
+	- ./convolution 4194304 768 9 >> convolution_k9_.out
+	- ./convolution 16777216 768 9 >> convolution_k9_.out
 
 	- ./convolution 1024 768 11 >> convolution_k11_.out
 	- ./convolution 2048 2048 11 >> convolution_k11_.out
 	- ./convolution 8192 8192 11 >> convolution_k11_.out
-#	- ./convolution 4194304 768 11 >> convolution_k11_.out
-#	- ./convolution 16777216 768 11 >> convolution_k11_.out
+	- ./convolution 4194304 768 11 >> convolution_k11_.out
+	- ./convolution 16777216 768 11 >> convolution_k11_.out
 
 	- ./convolution 1024 768 13 >> convolution_k13_.out
 	- ./convolution 2048 2048 13 >> convolution_k13_.out
 	- ./convolution 8192 8192 13 >> convolution_k13_.out
-#	- ./convolution 4194304 768 13 >> convolution_k13_.out
-#	- ./convolution 16777216 768 13 >> convolution_k13_.out
+	- ./convolution 4194304 768 13 >> convolution_k13_.out
+	- ./convolution 16777216 768 13 >> convolution_k13_.out
 
 	- ./convolution 1024 768 15 >> convolution_k15_.out
 	- ./convolution 2048 2048 15 >> convolution_k15_.out
 	- ./convolution 8192 8192 15 >> convolution_k15_.out
-#	- ./convolution 4194304 768 15 >> convolution_k15_.out
-#	- ./convolution 16777216 768 15 >> convolution_k15_.out
+	- ./convolution 4194304 768 15 >> convolution_k15_.out
+	- ./convolution 16777216 768 15 >> convolution_k15_.out
 
 
 
@@ -97,44 +97,44 @@ run_all_parallel:
 	- ./convolution_par 1024 768 3 >> convolution_k3_p.out
 	- ./convolution_par 2048 2048 3 >> convolution_k3_p.out
 	- ./convolution_par 8192 8192 3 >> convolution_k3_p.out
-#	- ./convolution_par 4194304 768 3 >> convolution_k3_p.out
-#	- ./convolution_par 16777216 768 3 >> convolution_k3_p.out
+	- ./convolution_par 4194304 768 3 >> convolution_k3_p.out
+	- ./convolution_par 16777216 768 3 >> convolution_k3_p.out
 
 	- ./convolution_par 1024 768 5 >> convolution_k5_p.out
 	- ./convolution_par 2048 2048 5 >> convolution_k5_p.out
 	- ./convolution_par 8192 8192 5 >> convolution_k5_p.out
-#	- ./convolution_par 4194304 768 5 >> convolution_k5_p.out
-#	- ./convolution_par 16777216 768 5 >> convolution_k5_p.out
+	- ./convolution_par 4194304 768 5 >> convolution_k5_p.out
+	- ./convolution_par 16777216 768 5 >> convolution_k5_p.out
 
 	- ./convolution_par 1024 768 7 >> convolution_k7_p.out
 	- ./convolution_par 2048 2048 7 >> convolution_k7_p.out
 	- ./convolution_par 8192 8192 7 >> convolution_k7_p.out
-#	- ./convolution_par 4194304 768 7 >> convolution_k7_p.out
-#	- ./convolution_par 16777216 768 7 >> convolution_k7_p.out
+	- ./convolution_par 4194304 768 7 >> convolution_k7_p.out
+	- ./convolution_par 16777216 768 7 >> convolution_k7_p.out
 
 	- ./convolution_par 1024 768 9 >> convolution_k9_p.out
 	- ./convolution_par 2048 2048 9 >> convolution_k9_p.out
 	- ./convolution_par 8192 8192 9 >> convolution_k9_p.out
-#	- ./convolution_par 4194304 768 9 >> convolution_k9_p.out
-#	- ./convolution_par 16777216 768 9 >> convolution_k9_p.out
+	- ./convolution_par 4194304 768 9 >> convolution_k9_p.out
+	- ./convolution_par 16777216 768 9 >> convolution_k9_p.out
 
 	- ./convolution_par 1024 768 11 >> convolution_k11_p.out
 	- ./convolution_par 2048 2048 11 >> convolution_k11_p.out
 	- ./convolution_par 8192 8192 11 >> convolution_k11_p.out
-#	- ./convolution_par 4194304 768 11 >> convolution_k11_p.out
-#	- ./convolution_par 16777216 768 11 >> convolution_k11_p.out
+	- ./convolution_par 4194304 768 11 >> convolution_k11_p.out
+	- ./convolution_par 16777216 768 11 >> convolution_k11_p.out
 
 	- ./convolution_par 1024 768 13 >> convolution_k13_p.out
 	- ./convolution_par 2048 2048 13 >> convolution_k13_p.out
 	- ./convolution_par 8192 8192 13 >> convolution_k13_p.out
-#	- ./convolution_par 4194304 768 13 >> convolution_k13_p.out
-#	- ./convolution_par 16777216 768 13 >> convolution_k13_p.out
+	- ./convolution_par 4194304 768 13 >> convolution_k13_p.out
+	- ./convolution_par 16777216 768 13 >> convolution_k13_p.out
 
 	- ./convolution_par 1024 768 15 >> convolution_k15_p.out
 	- ./convolution_par 2048 2048 15 >> convolution_k15_p.out
 	- ./convolution_par 8192 8192 15 >> convolution_k15_p.out
-#	- ./convolution_par 4194304 768 15 >> convolution_k15_p.out
-#	- ./convolution_par 16777216 768 15 >> convolution_k15_p.out
+	- ./convolution_par 4194304 768 15 >> convolution_k15_p.out
+	- ./convolution_par 16777216 768 15 >> convolution_k15_p.out
 
 
 
