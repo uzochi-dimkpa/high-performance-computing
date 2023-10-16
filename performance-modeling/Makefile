@@ -49,7 +49,7 @@ simple: clean compile
 
 
 
-run: run_all_seqneutial run_all_parallel
+run: run_all_sequential run_all_parallel
 
 run_all_sequential:
 	- ./convolution 1024 768 3 >> convolution_k3_.out
