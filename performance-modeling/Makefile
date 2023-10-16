@@ -51,7 +51,7 @@ simple: clean compile
 
 run: run_all_seqneutial run_all_parallel
 
-run_all_seqneutial:
+run_all_sequetial:
 	- ./convolution 1024 768 3 >> convolution_k3_.out
 	- ./convolution 2048 2048 3 >> convolution_k3_.out
 	- ./convolution 8192 8192 3 >> convolution_k3_.out
