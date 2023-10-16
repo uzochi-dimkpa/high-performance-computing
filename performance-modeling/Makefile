@@ -1,13 +1,14 @@
 LD=g++
+LDOMP=g++ -fopenmp
 LDFLAGS=-fopenmp -O3 -mfma -mavx2 -march=znver2 -mtune=znver2 -ffast-math -save-temps -fverbose-asm
 LDNOOPS=-fopenmp -mfma -mavx2 -save-temps -fverbose-asm
 VALGRINDFLAGS=--track-origins=yes --leak-check=full --show-leak-kinds=all --show-reachable=yes -s
 
 
 
-all: clean clean_parallel compile compile_parallel run_all run_all_parallel
+all: clean compile run
 
-run: clean compile run_all
+squential: clean_sequential compile_sequential run_all_sequential
 
 parallel: clean_parallel compile_parallel run_all_parallel
 
@@ -22,13 +23,13 @@ queue:
 
 
 
-debug: clean clean_parallel compile compile_parallel clean_debug
+debug: clean clean_parallel clean_debug compile compile_parallel
 	- valgrind $(VALGRINDFLAGS) ./convolution 50 50 3 >> debug_seq.out
 	- valgrind $(VALGRINDFLAGS) ./convolution 50 100 15 >> debug_seq.out
-	- valgrind $(VALGRINDFLAGS) ./convolution 8192 8192 9 >> debug_seq.out
+	- valgrind $(VALGRINDFLAGS) ./convolution 2048 1024 9 >> debug_seq.out
 	- valgrind $(VALGRINDFLAGS) ./convolution_par 50 50 3 >> debug_par.out
 	- valgrind $(VALGRINDFLAGS) ./convolution_par 50 100 15 >> debug_par.out
-	- valgrind $(VALGRINDFLAGS) ./convolution_par 8192 8192 9 >> debug_par.out
+	- valgrind $(VALGRINDFLAGS) ./convolution_par 2048 1024 9 >> debug_par.out
 #	- valgrind $(VALGRINDFLAGS) ./convolution 4194304 768 3 >> debug.out
 # --- terminate called after throwing an instance of 'std::bad_array_new_length' what():  std::
 # --- Killed Error 137 (ignored)
@@ -48,7 +49,9 @@ simple: clean compile
 
 
 
-run_all:
+run: run_all_seqneutial run_all_parallel
+
+run_all_seqneutial:
 	- ./convolution 1024 768 3 >> convolution_k3_.out
 	- ./convolution 2048 2048 3 >> convolution_k3_.out
 	- ./convolution 8192 8192 3 >> convolution_k3_.out
@@ -138,11 +141,13 @@ run_all_parallel:
 
 
 
-compile:
+compile: compile_sequential compile_parallel
+
+compile_sequential:
 	- $(LD) -o convolution convolution.cpp
 
 compile_parallel:
-	- $(LD) -o convolution_par convolution_par.cpp
+	- $(LDOMP) -o convolution_par convolution_par.cpp
 
 # compile_ops:
 # 	- $(LD) $(LDFLAGS) -o convolution convolution.cpp
@@ -152,7 +157,9 @@ compile_parallel:
 
 
 
-clean:
+clean: clean_sequential clean_parallel clean_debug
+
+clean_sequential:
 	- rm -rf *.o
 	- rm -rf *.s
 	- rm -rf *.ii

@@ -1,3 +1,3 @@
 #!/bin/sh
-make clean compile
-make run_all > convolution_.txt
+make clean_sequential compile_sequential
+make run_all_sequential > convolution_.txt
