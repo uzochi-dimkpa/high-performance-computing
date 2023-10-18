@@ -2,7 +2,10 @@ LD=g++
 LDOMP=g++ -fopenmp
 LDFLAGS=-fopenmp -O3 -mfma -mavx2 -march=znver2 -mtune=znver2 -ffast-math -save-temps -fverbose-asm
 LDNOOPS=-fopenmp -mfma -mavx2 -save-temps -fverbose-asm
-VALGRINDFLAGS=--track-origins=yes --leak-check=full --show-leak-kinds=all --show-reachable=yes -s
+VALGRINDFLAGS=--track-origins=yes --leak-check=full --show-leak-kinds=all --show-reachable=yes --log-file=VALGRIND.log -s
+CACHEGRINDFLAGS=--tool=cachegrind --log-file=CACHEGRIND.log
+HELGRINDFLAGS=--tool=helgrind --log-file=HELGRIND.log
+CALLGRINDFLAGSS=--tool=callgrind --log-file=CALLGRIND.log
 
 
 
@@ -20,6 +23,12 @@ parallel: clean_parallel compile_parallel run_all_parallel
 
 queue:
 	- sh convolution.sh
+
+queue_static:
+	- sbatch --partition=Centaurus --chdir=`pwd` --time=24:00:00 --nodes=1 --ntasks-per-node=16 --mem=120G --mail-type=END,FAIL,REQUEUE,TIME_LIMIT --mail-user=udimkpa@uncc.edu --job-name=convl convol.sh
+
+queue_dynamic:
+	- sbatch --partition=Centaurus --chdir=`pwd` --time=24:00:00 --nodes=1 --ntasks-per-node=16 --mem=120G --mail-type=END,FAIL,REQUEUE,TIME_LIMIT --mail-user=udimkpa@uncc.edu --job-name=convlpar convol_par.sh
 
 
 
