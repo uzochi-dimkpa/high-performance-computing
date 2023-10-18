@@ -6,6 +6,7 @@ venv
 *.o
 *.ii
 *.s
+*.txt
 *.out
 *_out.txt
 *.vscode
