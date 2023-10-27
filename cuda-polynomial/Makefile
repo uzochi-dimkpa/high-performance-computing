@@ -1,5 +1,6 @@
 # LD=g++
 NV=nvcc --ptxas-options=-v --machine=64 --gpu-architecture=compute_75 --gpu-code=sm_75,compute_75 # --- -gencode arch=compute_52,code=sm_52
+NVCLUSTER=nvcc --ptxas-options=-v --machine=64 --gpu-architecture=compute_72 --gpu-code=sm_72,compute_72
 LDOMP=g++ -fopenmp
 LDOPS=-fopenmp -O3 -mfma -mavx2 -march=znver2 -mtune=znver2 -ffast-math -save-temps -fverbose-asm
 LDNOOPS=-fopenmp -mfma -mavx2 -save-temps -fverbose-asm
@@ -21,7 +22,6 @@ run:
 	- ./cuda 1000000 256 512
 
 
-
 debug: clean_debug compile
 	- valgrind $(VALGRINDFLAGS) ./cuda
 
@@ -34,6 +34,9 @@ queue:
 
 compile:
 	- $(NV) -o cuda cuda.cu
+
+compile_cluster:
+	- $(NVCLUSTER) -o cuda cuda.cu
 
 # compile_ops:
 # 	- $(NV) $(LDOPS) -o cuda cuda.cu
