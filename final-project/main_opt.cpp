@@ -8,6 +8,27 @@
 #include <string>
 
 
+#include <thread>
+#include <mutex>
+#include <omp.h>
+#include <immintrin.h>
+
+
+
+// Mutex
+std::mutex mtx;
+
+// Thread batch
+std::vector<std::thread> threadBatch;
+
+// Total number of guesses made initialization
+unsigned long long int totalNumGuesses = 0;
+
+// Found match boolean
+bool foundMatch = false;
+
+// Number of threads
+#define NUM_THREADS 16
 
 // Stringify input
 #define STRINGIFY(s) #s
@@ -16,13 +37,13 @@
 // Rotate hex values left by c bits
 #define LEFTROTATE(x, n) (((x) << (n)) | ((x) >> (32 - (n))))
 
-// Functions F, G, H, I
+// Functions ONE, TWO, THREE, FOUR
 // 
 /// TODO: Implement function macros
-// #define F(x, y, z)
-// #define G(x, y, z)
-// #define H(x, y, z)
-// #define I(x, y, z)
+#define ONE(B, C, D) ((B & C) | ((~B) & D))
+#define TWO(B, C, D) ((D & B) | ((~D) & C))
+#define THREE(B, C, D) (B ^ C ^ D)
+#define FOUR(B, C, D) (C ^ (B | (~D)))
 
 // 1 byte; int
 std::uint8_t shiftPerRound[64] = {  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,
@@ -168,23 +189,29 @@ unsigned char* fakeMD5(std::string msg) {
     /// DEBUG:
 
     for (std::uint32_t i = 0; i < 64; ++i) {
-      std::uint32_t F, g;
+      std::uint32_t F, g = 0;
 
       if (i >= 0 && i <= 15) {
-        F = ((B & C) | ((std::uint32_t) (~B) & D));
-        g = i;
+        // F = ((B & C) | ((std::uint32_t) (~B) & D));
+        F = ONE(B, C, D);
+        // g = i;
+        ++g;
       } else if (i >= 16 && i <= 31) {
-        F = ((D & B) | ((std::uint32_t) (~D) & C));
+        // F = ((D & B) | ((std::uint32_t) (~D) & C));
+        F = TWO(B, C, D);
         g = ((5 * i) + 1) % 16;
       } else if (i >= 32 && i <= 47) {
-        F = (B ^ C ^ D);
+        // F = (B ^ C ^ D);
+        F = THREE(B, C, D);
         g = ((3 * i) + 5) % 16;
       } else {
-        F = (C ^ (B | (std::uint32_t) (~D)));
+        // F = (C ^ (B | (std::uint32_t) (~D)));
+        F = FOUR(B, C, D);
         g = (7 * i) % 16;
       }
 
-      F = (F + A + sineConstArr[i] + msgUint32Arr[g]);
+      // F = (F + A + sineConstArr[i] + msgUint32Arr[g]);
+      F += (A + sineConstArr[i] + msgUint32Arr[g]);
       A = D;
       D = C;
       C = B;
@@ -211,10 +238,10 @@ unsigned char* fakeMD5(std::string msg) {
       /// DEBUG:
     }
 
-    a0 = a0 + A;
-    b0 = b0 + B;
-    c0 = c0 + C;
-    d0 = d0 + D;
+    a0 += A;
+    b0 += B;
+    c0 += C;
+    d0 += D;
 
     ++loopCounter;
   }
@@ -256,7 +283,10 @@ bool compare(unsigned char* messageDigest, unsigned char* guessDigest) {
     if (messageDigest[i] != guessDigest[i]) {
       return false;
     }
-  } return true;
+  }
+  
+  foundMatch = true;
+  return true;
 }
 
 
@@ -276,8 +306,8 @@ unsigned char* hashMessage(std::string fileName, std::string msgType) {
   
   /// OUTPUT:
   // Printing input message and output digest
-  printMessage(msg, msgType);
-  printDigest(fakeMD5(msg), msgType);
+  // printMessage(msg, msgType);
+  // printDigest(fakeMD5(msg), msgType);
   
   return messageDigest;
 
@@ -336,33 +366,36 @@ int guess(std::string fileName) {
   unsigned long long int numPossibilities = 10 * std::pow(96, msgLength);
 
   // Make & print guesses
-  std::cout << std::endl;
+  // std::cout << std::endl;
   do {
-    // Initialize guess message string
-    // guessMsg = createGuess(msgLength);
+    // Initialize guess message string;
     guessMsg = createGuess(guessLength);
     if ((numGuesses % numPossibilities) == 0) ++guessLength;
-    // if ((numGuesses % numPossibilities) == 0) {++guessLength; std::cout << "Length: " << guessLength - 1 << ", guessMsg: " << guessMsg << std::endl;}
 
     // Increment number of guesses
     ++numGuesses;
-
-    // Print guess message
-    // std::cout << "guessMsg: " << guessMsg << std::endl;
 
     // Create guess digest
     guessDigest = fakeMD5(guessMsg);
   } while (!compare(messageDigest, guessDigest));
 
-  if (compare(messageDigest, guessDigest)) std::cout << "\n" << "Found a working input message!\
+  // Sequential calculation of total number of guesses
+  if (foundMatch) {
+    mtx.lock(); 
+    totalNumGuesses += numGuesses;
+    mtx.unlock();
+  }
+
+  // Output printing
+  // if (compare(messageDigest, guessDigest)) std::cout << "\n" << "Found a working input message!\
                                             \nSecond Pre-Image Resistance has been broken!\
                                             \nHere is an input that produces a matching hash:\
                                             \n!!!   [--->   " << guessMsg << "   <---]   !!!\
                                             \nalong with its matching digest:\
                                             \n+=+   [";
-                                            for (int i = 0; i < 15; ++i) std::cout << std::hex << (unsigned int) guessDigest[i] << " ";
-                                            std::cout << std::hex << (unsigned int) guessDigest[15] << "]   +=+\n";
-                                            std::cout << std::dec << "It took " << numGuesses << " guess(es)" << std::endl;
+                                            // for (int i = 0; i < 15; ++i) std::cout << std::hex << (unsigned int) guessDigest[i] << " ";
+                                            // std::cout << std::hex << (unsigned int) guessDigest[15] << "]   +=+\n";
+                                            // std::cout << std::dec << "It took " << numGuesses << " guess(es)" << std::endl;
   
   // Clear guess and free allocated memory
   guessMsg.clear(); delete[] messageDigest; delete[] guessDigest;
@@ -379,14 +412,32 @@ int main(int argc, char* argv[]) {
     return -1;
   }
 
+  // mGuesses
+  unsigned long long int nGuesses = 0;
+
+  // Threads
+  pthread_t threads[NUM_THREADS];
+
   // Get file name from command line argument
   std::string fileName(argv[1]);
 
   // Time start
   std::chrono::time_point<std::chrono::high_resolution_clock> time_start = std::chrono::high_resolution_clock::now();
   
-  // hashMessage("message.txt");
-  unsigned long long int nGuesses = guess(fileName + ".txt");
+  // unsigned long long int nGuesses = guess(fileName + ".txt");
+
+  for (int i = 0; i < NUM_THREADS; i++) {
+    std::thread th (
+      [fileName, i] () {
+        guess(fileName + ".txt");
+      }
+    );
+
+    threadBatch.push_back(std::move(th));
+  }
+
+  // Join threads
+  for (std::thread &th : threadBatch) th.join();
 
   // Time end
   std::chrono::time_point<std::chrono::high_resolution_clock> time_end = std::chrono::high_resolution_clock::now();
@@ -394,9 +445,11 @@ int main(int argc, char* argv[]) {
   // Time elapsed
   std::chrono::duration<double> elapsed_seconds = time_end - time_start;
 
-  // Time duration output
+  // Time duration & results output
+  std::cout << std::dec << "It took " << totalNumGuesses << " guess(es)" << std::endl;
   std::cout << "\n\nTime elapsed (s): " << elapsed_seconds.count() << std::endl;
-  std::cout << "# Guesses / sec: " << nGuesses / elapsed_seconds.count() << std::endl;
+  // std::cout << "# Guesses / sec: " << nGuesses / elapsed_seconds.count() << std::endl;
+  std::cout << "# Guesses / sec: " << totalNumGuesses / elapsed_seconds.count() << std::endl;
 
   return 0;
 }
