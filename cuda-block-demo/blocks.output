@@ -1,0 +1,30 @@
+========================
+1,1
+========================
+threadIdx={0, 0, 0} blockIdx={0, 0, 0} blockDim={1, 1, 1} gridDim={1, 1, 1}
+
+========================
+2,3
+========================
+threadIdx={0, 0, 0} blockIdx={0, 0, 0} blockDim={3, 1, 1} gridDim={2, 1, 1}
+threadIdx={1, 0, 0} blockIdx={0, 0, 0} blockDim={3, 1, 1} gridDim={2, 1, 1}
+threadIdx={2, 0, 0} blockIdx={0, 0, 0} blockDim={3, 1, 1} gridDim={2, 1, 1}
+threadIdx={0, 0, 0} blockIdx={1, 0, 0} blockDim={3, 1, 1} gridDim={2, 1, 1}
+threadIdx={1, 0, 0} blockIdx={1, 0, 0} blockDim={3, 1, 1} gridDim={2, 1, 1}
+threadIdx={2, 0, 0} blockIdx={1, 0, 0} blockDim={3, 1, 1} gridDim={2, 1, 1}
+
+========================
+special
+========================
+threadIdx={0, 0, 0} blockIdx={0, 1, 0} blockDim={1, 2, 3} gridDim={1, 2, 1}
+threadIdx={0, 1, 0} blockIdx={0, 1, 0} blockDim={1, 2, 3} gridDim={1, 2, 1}
+threadIdx={0, 0, 1} blockIdx={0, 1, 0} blockDim={1, 2, 3} gridDim={1, 2, 1}
+threadIdx={0, 1, 1} blockIdx={0, 1, 0} blockDim={1, 2, 3} gridDim={1, 2, 1}
+threadIdx={0, 0, 2} blockIdx={0, 1, 0} blockDim={1, 2, 3} gridDim={1, 2, 1}
+threadIdx={0, 1, 2} blockIdx={0, 1, 0} blockDim={1, 2, 3} gridDim={1, 2, 1}
+threadIdx={0, 0, 0} blockIdx={0, 0, 0} blockDim={1, 2, 3} gridDim={1, 2, 1}
+threadIdx={0, 1, 0} blockIdx={0, 0, 0} blockDim={1, 2, 3} gridDim={1, 2, 1}
+threadIdx={0, 0, 1} blockIdx={0, 0, 0} blockDim={1, 2, 3} gridDim={1, 2, 1}
+threadIdx={0, 1, 1} blockIdx={0, 0, 0} blockDim={1, 2, 3} gridDim={1, 2, 1}
+threadIdx={0, 0, 2} blockIdx={0, 0, 0} blockDim={1, 2, 3} gridDim={1, 2, 1}
+threadIdx={0, 1, 2} blockIdx={0, 0, 0} blockDim={1, 2, 3} gridDim={1, 2, 1}

@@ -49,7 +49,8 @@ __device__ bool guessFound = false;
 #define FOUR(B, C, D) (C ^ (B | (~D)))
 
 // CUDA kernel dimensions
-#define NBLOCKS 128
+#define NBLOCKS 16
+// #define NBLOCKS 128
 #define NTHREADS 256
 
 // 1 byte; unsigned char
@@ -177,6 +178,8 @@ __device__ unsigned char* createGuess(unsigned long long int msgLength, curandSt
   }
 
   return guessMsg;
+
+  delete[] guessMsg;
 }
 
 
@@ -291,6 +294,10 @@ __global__ void run(std::uint64_t* d_numGuessesArr, unsigned char* d_inputMsgCha
   std::uint64_t tid = blockIdx.x * blockDim.x + threadIdx.x;
 
   extern __shared__ unsigned char inputMsg[];
+  extern __shared__ unsigned char shared_msgDigest[16];
+  extern __shared__ std::uint8_t shared_shiftPerRound[64];
+  extern __shared__ std::uint32_t shared_sineConstArr[64];
+  // extern __shared__ curandState shared_randState[NTHREADS*NBLOCKS];
   
   if (threadIdx.x < msgLength) {
     for (int i = threadIdx.x; i < msgLength; i += blockDim.x) {
@@ -302,12 +309,29 @@ __global__ void run(std::uint64_t* d_numGuessesArr, unsigned char* d_inputMsgCha
 
   if (tid == 0) {
     d_msgDigest = fakeMD5(inputMsg, msgLength, paddedLength, d_shiftPerRound, d_sineConstArr);
+    for (int i = 0; i < 16; ++i) shared_msgDigest[i] = d_msgDigest[i];
   }
+
+  // if (tid == 1) {
+  // }
+  
+  if (tid == 2) {
+    for (int i = 0; i < 64; ++i) shared_shiftPerRound[i] = d_shiftPerRound[i];
+  }
+
+  if (tid == 3) {
+    for (int i = 0; i < 64; ++i) shared_sineConstArr[i] = d_sineConstArr[i];
+  }
+
+  // if (tid == 4) {
+  //   for (int i = 0; i < NBLOCKS*NTHREADS; ++i) shared_randState[i] = d_randState[i];
+  // }
 
   __syncthreads();
 
   // make guesses
-  std::uint64_t nGuesses = guess(d_randState, d_inputMsgChar, msgLength, paddedLength, d_shiftPerRound, d_sineConstArr, d_msgDigest, inputMsg);
+  // std::uint64_t nGuesses = guess(d_randState, inputMsg, msgLength, paddedLength, d_shiftPerRound, d_sineConstArr, shared_msgDigest, inputMsg);
+  std::uint64_t nGuesses = guess(d_randState, inputMsg, msgLength, paddedLength, shared_shiftPerRound, shared_sineConstArr, shared_msgDigest, inputMsg);
   
   // printf("\n~=~tid: %u~\n", tid);
   // printf("\n~+~nGuesses: %u~\n", nGuesses);
@@ -342,9 +366,6 @@ int main(int argc, char* argv[]) {
   while (paddedLength <= msgLength * 8) paddedLength += 512;
 
   std::cout << "msgLength: " << msg.length() << ", paddedLength: " << paddedLength << std::endl;
-  
-  unsigned long long int* nGuesses = (unsigned long long int*) malloc(sizeof(unsigned long long int));
-  nGuesses[0] = 0;
 
   unsigned char inputMsgChar[msgLength];
   for (int i = 0; i < msgLength; ++i) {
@@ -419,36 +440,45 @@ int main(int argc, char* argv[]) {
   // run<<<1,1, (paddedLength / 8) * sizeof(unsigned char)>>>(d_numGuessesArr, d_inputMsgChar, d_msgDigest, msgLength, paddedLength, d_shiftPerRound, d_sineConstArr, d_randState);
   run<<<NBLOCKS, NTHREADS, (paddedLength / 8) * sizeof(unsigned char)>>>(d_numGuessesArr, d_inputMsgChar, d_msgDigest, msgLength, paddedLength, d_shiftPerRound, d_sineConstArr, d_randState);
 
-  CUDA_err();
-
   cudaDeviceSynchronize();
+
+  CUDA_err();
 
   // Time end
   std::chrono::time_point<std::chrono::high_resolution_clock> time_end = std::chrono::high_resolution_clock::now();
   
   cudaMemcpy(numGuessesArr, d_numGuessesArr, NBLOCKS * NTHREADS * sizeof(std::uint64_t), cudaMemcpyDeviceToHost);
 
-  CUDA_err();
-
   cudaDeviceSynchronize();
 
+  CUDA_err();
+
   cudaFree(d_inputMsgChar);
+  cudaFree(d_msgDigest);
   cudaFree(d_shiftPerRound);
   cudaFree(d_sineConstArr);
   cudaFree(d_randState);
   cudaFree(d_numGuessesArr);
 
   CUDA_err();
+
+  cudaDeviceSynchronize();
   
   // Time elapsed
   std::chrono::duration<double> elapsed_seconds = time_end - time_start;
 
   // Counting up all guesses
+  for (std::uint64_t i = 0; i < NTHREADS * NBLOCKS; ++i) std::cout << "Thread " << i << " made " << numGuessesArr[i] << "guesses!" << std::endl;
   for (std::uint64_t i = 0; i < NTHREADS * NBLOCKS; ++i) totalNumGuesses += numGuessesArr[i];
 
   // Time duration output
   std::cout << "\n\nTime elapsed (s): " << elapsed_seconds.count() << std::endl;
   std::cout << "# Guesses / sec: " << totalNumGuesses / elapsed_seconds.count() << std::endl;
+
+  // Memory deallocation
+  msg.clear();
+  delete[] numGuessesArr;
+  // delete[] shiftPerRound; delete[] sineConstArr;
 
   return 0;
 }
