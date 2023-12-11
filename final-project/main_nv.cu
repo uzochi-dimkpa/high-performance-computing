@@ -141,8 +141,8 @@ __device__ unsigned char* fakeMD5(unsigned char* msg, std::uint64_t msgLength, s
 
   return outputDigest;
 
-  delete[] outputDigest;
-  delete[] msgUint32Arr;
+  // delete[] msgUint32Arr;
+  // delete[] outputDigest;
 }
 
 
@@ -179,7 +179,7 @@ __device__ unsigned char* createGuess(unsigned long long int msgLength, curandSt
 
   return guessMsg;
 
-  delete[] guessMsg;
+  // delete[] guessMsg;
 }
 
 

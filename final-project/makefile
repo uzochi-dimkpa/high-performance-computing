@@ -36,6 +36,7 @@ run_opt:
 run_nv:
 	- ./main_nv message >> main_nv_.out
 #	- compute-sanitizer --tool memcheck ./main_nv message >> main_nv_.out
+#	- compute-sanitize --tool memcheck ./main_nv message >> main_nv_.out
 #	- cuda-memcheck --tool memcheck ./main_nv message >> main_nv_.out
 
 run_debug:
